@@ -14,7 +14,7 @@ import utils
 
 router = APIRouter(tags=['stremio'])
 
-ICON = Path(__file__).parent / 'static' / 'icon.png'
+ICON = Path(__file__).parent / 'icon.png'
 RTL = {'ar', 'he', 'fa', 'ur'}
 
 

@@ -1,4 +1,4 @@
-# TMDB Streamio
+# TMDB Streamio Addon
 
 A Stremio catalog add-on for discovering movies and TV series using data from [The Movie Database (TMDB)](https://www.themoviedb.org/). It provides localized catalogs, title and person search, movie collections, and detailed metadata including series episodes.
 

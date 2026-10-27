@@ -1,0 +1,6 @@
+fastapi
+python-dotenv
+uvicorn
+themoviedb>=2
+aiohttp
+tqdm

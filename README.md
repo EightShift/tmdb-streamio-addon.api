@@ -13,7 +13,7 @@ A Stremio catalog add-on for discovering movies and TV series using data from [T
 
 ## Requirements
 
-- Python 3.13 or Docker
+- Python 3.13
 - A TMDB API key
 
 Create an API key in your [TMDB account settings](https://www.themoviedb.org/settings/api). Keep the key private and do not commit it.
@@ -57,37 +57,13 @@ DEFAULT_LANGUAGE=en-US
 
 ## Run with Docker
 
-The included `compose.yml` runs the `tmdb-streamio:latest` image, publishes port `8000`, and keeps the cache in a named volume. Build the image once, then create a `.env` file beside `compose.yml`:
-
 ```bash
-docker build -t tmdb-streamio:latest .
-```
-
-Create `.env` with your TMDB API key:
-
-```dotenv
-TMDB_API_KEY=your_tmdb_api_key
-# Optional when exposed through a public URL or reverse proxy:
-# PUBLIC_URL=https://addons.example.com
-```
-
-Start the add-on with:
-
-```bash
-docker compose up -d
-```
-
-It will be available at `http://localhost:8000`. To stop it, run `docker compose down`; the named cache volume is preserved.
-
-You can also run the image directly:
-
-```bash
-docker build -t tmdb-streamio .
-docker run --name tmdb-streamio \
+docker build -t tmdb-streamio-addon .
+docker run --name tmdb-streamio-addon \
   -p 8000:8000 \
   -e TMDB_API_KEY=your_tmdb_api_key \
-  -v tmdb-streamio-cache:/app/cache \
-  tmdb-streamio
+  -v tmdb-streamio-addon-cache:/app/cache \
+  tmdb-streamio-addon
 ```
 
 The named volume preserves the genre and collection caches between container runs. For deployment behind a reverse proxy or on a public host, set `PUBLIC_URL` to the externally reachable base URL (for example, `https://addons.example.com`) so generated manifest and installation links use the correct address.

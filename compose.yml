@@ -11,8 +11,12 @@ services:
       PORT: 8000
       PUBLIC_URL: ${PUBLIC_URL:-}
       DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-en-US}
+      API_KEYS_ENABLED: ${API_KEYS_ENABLED:-false}
+      API_KEYS: ${API_KEYS:-}
+      API_KEYS_FILE: ${API_KEYS_FILE:-}
     volumes:
       - tmdb-streamio-addon-cache:/app/cache
+      - ./secrets:/app/secrets:ro
 
 volumes:
   tmdb-streamio-addon-cache:

@@ -75,6 +75,9 @@ All settings are optional except `TMDB_API_KEY`.
 | Variable | Default | Description |
 | --- | --- | --- |
 | `TMDB_API_KEY` | — | TMDB API key. Required. |
+| `API_KEYS_ENABLED` | `false` | Require a key for all HTTP endpoints, including documentation. Accepts true/false, 1/0, yes/no, on/off. |
+| `API_KEYS` | empty | Access keys separated by commas, semicolons, spaces or newlines. |
+| `API_KEYS_FILE` | empty | Path to a UTF-8 file containing access keys. Relative paths use the server working directory. Combined with `API_KEYS`. |
 | `HOST` | `0.0.0.0` | Host interface used by the built-in server. |
 | `PORT` | `8000` | Port used by the built-in server. |
 | `PUBLIC_URL` | empty | Public base URL used to build manifest and install links. Set this when deployed behind a proxy. |
@@ -91,6 +94,33 @@ All settings are optional except `TMDB_API_KEY`.
 | `TMDB_RPS` | `40` | TMDB requests-per-second limit used by the cache/warm-up code. |
 
 ## Add-on endpoints
+
+### Optional API key authentication
+
+These access keys are separate from `TMDB_API_KEY`. For example:
+
+```dotenv
+API_KEYS_ENABLED=true
+API_KEYS=first-secret-key,second-secret-key
+API_KEYS_FILE=./secrets/api-keys.txt
+```
+
+Either key source can be used on its own. The file accepts one key per line
+or the same separators as `API_KEYS`; blank lines and lines starting with `#`
+are ignored. Keys may contain letters, digits, `.`, `_`, `~`, and `-`.
+The `secrets/` directory is ignored by Git. Create the file yourself; keys are
+loaded at startup, so restart the server after changing them. When authentication
+is enabled, a missing/unreadable file or an empty key set prevents startup.
+When disabled, no key file is read and requests work without keys.
+
+Send `X-API-Key: first-secret-key` or `Authorization: Bearer first-secret-key`.
+Missing or invalid keys receive HTTP 401. For Stremio, open
+`https://addons.example.com/key/first-secret-key/en-US/install` and use its
+installation link. Generated links preserve the key, including language changes.
+Use HTTPS and keep these URLs private: they contain the access key.
+
+With Docker Compose, `./secrets` is mounted at `/app/secrets` (read-only).
+Set `API_KEYS_FILE=/app/secrets/api-keys.txt` in `.env` to use that file.
 
 - `/` or `/{language}/install` — installation page with a language selector.
 - `/manifest.json` or `/{language}/manifest.json` — Stremio manifest.

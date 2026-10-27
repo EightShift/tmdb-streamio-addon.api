@@ -1,7 +1,32 @@
 import os
+import re
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+
+
+def load_api_keys():
+    enabled = os.getenv('API_KEYS_ENABLED', 'false').strip().lower()
+    if enabled not in {'true', 'false', '1', '0', 'yes', 'no', 'on', 'off'}:
+        raise ValueError('API_KEYS_ENABLED must be a boolean')
+    if enabled in {'false', '0', 'no', 'off'}:
+        return False, frozenset()
+    keys = set(filter(None, re.split(r'[,;\s]+', os.getenv('API_KEYS', ''))))
+    filename = os.getenv('API_KEYS_FILE', '').strip()
+    if filename:
+        for line in Path(filename).read_text(encoding='utf-8-sig').splitlines():
+            line = line.strip()
+            if line and not line.startswith('#'):
+                keys.update(filter(None, re.split(r'[,;\s]+', line)))
+    if not keys:
+        raise ValueError('API_KEYS_ENABLED requires API_KEYS or a non-empty API_KEYS_FILE')
+    if any(not re.fullmatch(r'[A-Za-z0-9._~-]+', key) for key in keys):
+        raise ValueError('API keys may contain only letters, digits, dot, underscore, tilde and hyphen')
+    return True, frozenset(keys)
+
+
+API_KEYS_ENABLED, API_KEYS = load_api_keys()
 
 VERSION = "1.0.0"
 NAME = "🎬 TMDB Streamio"

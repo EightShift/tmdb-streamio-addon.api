@@ -1,0 +1,18 @@
+services:
+  tmdb-streamio-addon:
+    image: tmdb-streamio-addon:latest
+    container_name: tmdb-streamio-addon
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      TMDB_API_KEY: ${TMDB_API_KEY:?Set TMDB_API_KEY in your environment or .env file}
+      HOST: 0.0.0.0
+      PORT: 8000
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-en-US}
+    volumes:
+      - tmdb-streamio-addon-cache:/app/cache
+
+volumes:
+  tmdb-streamio-addon-cache:

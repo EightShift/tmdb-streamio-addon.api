@@ -15,7 +15,7 @@ COPY logger.py .
 COPY routes.py .
 COPY tmdb.py .
 COPY utils.py .
-COPY static ./static
+COPY icon.png .
 
 ENV CACHE_DIR=/app/cache
 VOLUME /app/cache
